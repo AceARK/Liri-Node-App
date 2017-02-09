@@ -7,3 +7,8 @@ var twitterDetails = {
 	twitter_access_token_key : twitterRequire.twitterKeys.access_token_key,
 	twitter_access_token_secret : twitterRequire.twitterKeys.access_token_secret
 }
+
+var command = process.argv[2];
+
+console.log(command);
+

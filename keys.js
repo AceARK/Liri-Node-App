@@ -1,5 +1,3 @@
-console.log("This is lOaDeD!");
-
 exports.twitterKeys = {
 	consumer_key: 'yO0EeJo7K540Am3MKDMJFbAGk',
 	consumer_secret: 'rno3rVswscQF6b21hXc2pmjmTPpnBaPP4h6Kkn3TrPYn9Xh6tT',
