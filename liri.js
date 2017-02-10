@@ -100,65 +100,75 @@ function fetchMyTweets() {
 			console.log("===============================");
 			// Get and print tweets
 			tweets.every(function(item, index) {
-				// Logging tweet and info
-				fs.appendFile("log.txt", "\n" + "-----------------------" + "\n" + item.created_at + "\n" + item.text + "\n" + "-----------------------" , function(error) {
-					if(error) {
-						console.log(error);
-					}
-				})
-			    console.log(" ");
-				console.log(item.created_at);
-				console.log(" ");
-				console.log(item.text);
-				console.log(" ");
-				console.log("===============================");
 				// Cutting off latest tweets at 20
-			    if (index >= 20)
-			        return false;
-			    else return true;
+			    if (index < 20) {
+			    	// Logging tweet and info
+					fs.appendFile("log.txt", "\n" + "-----------------------" + "\n" + item.created_at + "\n" + item.text + "\n" + "-----------------------" , function(error) {
+						if(error) {
+							console.log(error);
+						}
+					})
+				    console.log(" ");
+					console.log(item.created_at);
+					console.log(" ");
+					console.log(item.text);
+					console.log(" ");
+					console.log("===============================");
+			    	return true;
+			    }
+				
 			});
 		} 
 	});
 }
 
 function fetchMovieDetails(movieName) {
-	movieName = movieName.trim().split(" ").join("+");
-	console.log(movieName);
-	request('http://www.omdbapi.com/?t=' + movieName, function (error, response, body) {
-		// If no error and statusCodes are either success 
-		if (!error && (response.statusCode == 200)) {
-			var data = JSON.parse(body);
-			console.log("========================");
-		    console.log("Title: " + data.Title);
-		    console.log("Released in: " + data.Year);
-		    console.log("Rated: " + data.Rated);
-		    console.log("Country: " + data.Country);
-		    console.log("Language: " + data.Language);
-		    console.log("Plot: " + data.Plot);
-		    console.log("Actors: " + data.Actors);
-		    console.log("Rotten Tomatoes Rating: " + data.tomatoRating);
-		    console.log("Rotten Tomatoes URL: " + data.tomatoURL);
-		    // Log data
-		    fs.appendFile("log.txt", "\n" + "-----------------------" + "\n" + data.Title + "\n" + data.Year + "\n"+ data.Rated + "\n" + data.Country + "\n" + data.Language + "\n" + data.Actors + "\n"+ data.Plot + "\n" + data.tomatoRating + "\n" + data.tomatoURL + "-----------------------" , function(error) {
-				if(error) {
-					console.log(error);
-				}
-			})
-		    console.log("========================");
-		}else if(response.statusCode == 503) {
-			console.log("Service Unavailable");
-			console.log("------------------------");
-			console.log("HTTP Error 503. The service is unavailable.");
-		}else if(response.statusCode == 400) {
-			console.log("Bad request.");
-		}else if(response.statusCode == 502) {
-			console.log("Bad gateway.");
-		}else if(response.statusCode == 401) {
-			console.log("Unauthorized.");
-		}else {
-			console.log("Error line: " + error);
-		}
-	})
+	if(movieName === "") {
+		console.log("----------------------");
+		console.log('If you haven\'t watched "Mr. Nobody," then you should: http://www.imdb.com/title/tt0485947/');
+		console.log("It's on Netflix!");
+		console.log("----------------------");
+	}else {
+		movieName = movieName.trim().split(" ").join("+");
+		console.log(movieName);
+		request('http://www.omdbapi.com/?t=' + movieName + '&tomatoes=true', function (error, response, body) {
+			// If no error and statusCodes are either success 
+			if (!error && (response.statusCode == 200)) {
+				var data = JSON.parse(body);
+				console.log("========================");
+			    console.log("Title: " + data.Title);
+			    console.log("Released in: " + data.Year);
+			    console.log("Rated: " + data.Rated);
+			    console.log("Country: " + data.Country);
+			    console.log("Language: " + data.Language);
+			    console.log("Plot: " + data.Plot);
+			    console.log("Actors: " + data.Actors);
+			    console.log("Rotten Tomatoes Rating: " + data.tomatoRating);
+			    console.log("Rotten Tomatoes URL: " + data.tomatoURL);
+			    // Log data
+			    fs.appendFile("log.txt", "\n" + "-----------------------" + "\n" + data.Title + "\n" + data.Year + "\n"+ data.Rated + "\n" + data.Country + "\n" + data.Language + "\n" + data.Actors + "\n"+ data.Plot + "\n" + data.tomatoRating + "\n" + data.tomatoURL + "-----------------------" , function(error) {
+					if(error) {
+						console.log(error);
+					}
+				})
+			    console.log("========================");
+			}else if(response.statusCode == 503) {
+				console.log("------------------------");
+				console.log("Service Unavailable");
+				console.log("------------------------");
+				console.log("HTTP Error 503. The service is unavailable.");
+				console.log("------------------------");
+			}else if(response.statusCode == 400) {
+				console.log("Bad request.");
+			}else if(response.statusCode == 502) {
+				console.log("Bad gateway.");
+			}else if(response.statusCode == 401) {
+				console.log("Unauthorized.");
+			}else {
+				console.log("Error line: " + error);
+			}
+		})
+	}
 }
 
 // Function to do whatever is written in random.txt file
