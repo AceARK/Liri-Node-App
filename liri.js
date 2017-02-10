@@ -1,5 +1,6 @@
 var spotify = require('spotify');
 var Twitter = require('twitter');
+var request = require('request');
 var fs = require("fs");
 var twitterRequire = require("./keys.js");
 
@@ -46,7 +47,7 @@ function performFunctionIfCommandIs(inputCommand, query) {
 			break;
 
 		case "movie-this":
-			fetchMovieDetails();
+			fetchMovieDetails(query);
 			break;
 
 		case "do-what-it-says":
@@ -117,8 +118,41 @@ function fetchMyTweets() {
 	});
 }
 
-function fetchMovieDetails() {
-
+function fetchMovieDetails(movieName) {
+	movieName = movieName.split(" ").join("+");
+	request('http://www.omdbapi.com/?t=beauty+and+the+beast&tomatoes=true', function (error, response, body) {
+		// If no error and statusCodes are either success 
+		if (!error && (response.statusCode == 200)) {
+			console.log("-----------------------");
+			// console.log(body);
+		    console.log("Title: " + body.Title);
+		    console.log("Released in: " + body.Year);
+		    console.log("Rated: " + body.Rated);
+		    console.log("Country: " + body.Country);
+		    console.log("Language: " + body.Language);
+		    console.log("Plot: " + body.Plot);
+		    console.log("Actors: " + body.Actors);
+		    console.log("Rotten Tomatoes Rating: " + body.tomatoRating);
+		    console.log("Rotten Tomatoes URL: " + body.tomatoURL);
+		    // Log data
+		    fs.appendFile("log.txt", "\n" + "-----------------------" + "\n" + body.Title + "\n" + body.Year + "\n"+ body.Rated + "\n" + body.Country + "\n" + body.Language + "\n" + body.Actors + "\n"+ body.Plot + "\n" + body.tomatoRating + "\n" + body.tomatoURL + "-----------------------" , function(error) {
+				if(error) {
+					console.log(error);
+				}
+			})
+		    console.log("-----------------------");
+		}else if(response.statusCode == 503) {
+			console.log("The service is unavailable.");
+		}else if(response.statusCode == 400) {
+			console.log("Bad request.");
+		}else if(response.statusCode == 502) {
+			console.log("Bad gateway.");
+		}else if(response.statusCode == 401) {
+			console.log("Unauthorized.");
+		}else {
+			console.log("Error line: " + error);
+		}
+	})
 }
 
 // Function to do whatever is written in random.txt file
