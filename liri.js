@@ -35,7 +35,10 @@ logData(command, parameter);
 function performFunctionIfCommandIs(inputCommand, query) {
 	switch(inputCommand) {
 		case "spotify-this-song":
-			if(parameter === "") {
+			console.log("input command: " + inputCommand);
+			console.log("query: " + query);
+			console.log("parameter: " + parameter);
+			if(query === "" || parameter === "") {
 				spotifySearch("the sign");
 			}else {
 				spotifySearch(query);
@@ -89,7 +92,7 @@ function spotifySearch(parameter) {
 // Function to fetch latest 20 tweets
 function fetchMyTweets() {
 	// params variable holds the screen_name of the user. Currently checking 'WatchingInAwe's' tweets
-	var params = {screen_name: 'WatchingInAwe'};
+	var params = {screen_name: 'realDonaldTrump'};
 	// API call to fetch tweets of given username
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 		if (!error) {
@@ -119,30 +122,33 @@ function fetchMyTweets() {
 }
 
 function fetchMovieDetails(movieName) {
-	movieName = movieName.split(" ").join("+");
-	request('http://www.omdbapi.com/?t=beauty+and+the+beast&tomatoes=true', function (error, response, body) {
+	movieName = movieName.trim().split(" ").join("+");
+	console.log(movieName);
+	request('http://www.omdbapi.com/?t=' + movieName, function (error, response, body) {
 		// If no error and statusCodes are either success 
 		if (!error && (response.statusCode == 200)) {
-			console.log("-----------------------");
-			// console.log(body);
-		    console.log("Title: " + body.Title);
-		    console.log("Released in: " + body.Year);
-		    console.log("Rated: " + body.Rated);
-		    console.log("Country: " + body.Country);
-		    console.log("Language: " + body.Language);
-		    console.log("Plot: " + body.Plot);
-		    console.log("Actors: " + body.Actors);
-		    console.log("Rotten Tomatoes Rating: " + body.tomatoRating);
-		    console.log("Rotten Tomatoes URL: " + body.tomatoURL);
+			var data = JSON.parse(body);
+			console.log("========================");
+		    console.log("Title: " + data.Title);
+		    console.log("Released in: " + data.Year);
+		    console.log("Rated: " + data.Rated);
+		    console.log("Country: " + data.Country);
+		    console.log("Language: " + data.Language);
+		    console.log("Plot: " + data.Plot);
+		    console.log("Actors: " + data.Actors);
+		    console.log("Rotten Tomatoes Rating: " + data.tomatoRating);
+		    console.log("Rotten Tomatoes URL: " + data.tomatoURL);
 		    // Log data
-		    fs.appendFile("log.txt", "\n" + "-----------------------" + "\n" + body.Title + "\n" + body.Year + "\n"+ body.Rated + "\n" + body.Country + "\n" + body.Language + "\n" + body.Actors + "\n"+ body.Plot + "\n" + body.tomatoRating + "\n" + body.tomatoURL + "-----------------------" , function(error) {
+		    fs.appendFile("log.txt", "\n" + "-----------------------" + "\n" + data.Title + "\n" + data.Year + "\n"+ data.Rated + "\n" + data.Country + "\n" + data.Language + "\n" + data.Actors + "\n"+ data.Plot + "\n" + data.tomatoRating + "\n" + data.tomatoURL + "-----------------------" , function(error) {
 				if(error) {
 					console.log(error);
 				}
 			})
-		    console.log("-----------------------");
+		    console.log("========================");
 		}else if(response.statusCode == 503) {
-			console.log("The service is unavailable.");
+			console.log("Service Unavailable");
+			console.log("------------------------");
+			console.log("HTTP Error 503. The service is unavailable.");
 		}else if(response.statusCode == 400) {
 			console.log("Bad request.");
 		}else if(response.statusCode == 502) {
@@ -160,6 +166,7 @@ function doWhatRandomFileSays() {
 	// Reading random.txt 
 	fs.readFile("random.txt", "utf-8", function(error, data) {
 		var dataArray = data.split(",");
+		console.log("Data array: " + dataArray);
 		// Sending the command and parameter to map function
 		performFunctionIfCommandIs(dataArray[0], dataArray[1]);
 		// console.log(data);
