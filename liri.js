@@ -35,10 +35,10 @@ logData(command, parameter);
 function performFunctionIfCommandIs(inputCommand, query) {
 	switch(inputCommand) {
 		case "spotify-this-song":
-			console.log("input command: " + inputCommand);
-			console.log("query: " + query);
-			console.log("parameter: " + parameter);
-			if(query === "" || parameter === "") {
+			console.log("spotify switch input command: " + inputCommand);
+			console.log("spotify switch query: " + query);
+			// console.log("parameter: " + parameter);
+			if(query === "") {
 				spotifySearch("the sign");
 			}else {
 				spotifySearch(query);
@@ -54,23 +54,38 @@ function performFunctionIfCommandIs(inputCommand, query) {
 			break;
 
 		case "do-what-it-says":
+			console.log("in switch");
+			// console.log("query: " + query);
+			// console.log("paramtr: " + parameter);
 			doWhatRandomFileSays();
+			// console.log("after reading file");
+			// console.log("query: " + query);
+			// console.log("paramtr: " + parameter);
+			break;
+
+		default: 
+			console.log("Enter: 'node liri.js' + any of the following: 'spotify-this-song <songName>', 'my-tweets', 'movie-this <movieName>', or 'do-what-it-says'");
+			break;
 	}
 }
 
 // Function to perform a spotify search of song entered by user
 function spotifySearch(parameter) {
+	console.log("in spotify function");
+	console.log("paramtr: " + parameter);
 	// Spotify API call with user-specified song name as parameter
 	spotify.search({ type: 'track', query: parameter}, function(err, data) {
 		    if ( err ) {
 		        console.log('Error occurred: ' + err);
 		        return;
 		    }
+		    console.log("Data: " + data);
 		    // Storing required data in array
 		 	var songDetailArray = data.tracks.items;
+		 	console.log("songdetail array: " + songDetailArray);
 		 	// Filtered array having just the data with song name specified
 		 	// This is done due to the inconsistent and disparaging data provided by this package
-		 	var newArray = songDetailArray.filter(item => item.name.trim().toLowerCase() === (parameter.trim()));
+		 	var newArray = songDetailArray.filter(item => item.name.trim().toLowerCase() === (parameter.trim().toLowerCase()));
 		 	// Printing out details
 		 	console.log("------------------------------");
 		 	console.log(" ");
@@ -175,11 +190,12 @@ function fetchMovieDetails(movieName) {
 function doWhatRandomFileSays() {
 	// Reading random.txt 
 	fs.readFile("random.txt", "utf-8", function(error, data) {
-		var dataArray = data.split(",");
+		var dataArray = data.split(',');
 		console.log("Data array: " + dataArray);
+		var nameOfSong = dataArray[1].substring(1,dataArray[1].length-1);
+		console.log("Song name: " + nameOfSong);
 		// Sending the command and parameter to map function
-		performFunctionIfCommandIs(dataArray[0], dataArray[1]);
-		// console.log(data);
+		performFunctionIfCommandIs(dataArray[0], nameOfSong);
 	});
 }
 
