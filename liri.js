@@ -2,6 +2,7 @@ var spotify = require('spotify');
 var Twitter = require('twitter');
 var request = require('request');
 var fs = require("fs");
+var moment = require("moment");
 var twitterRequire = require("./keys.js");
 
 // Storing twitter keys in A variable
@@ -35,9 +36,6 @@ logData(command, parameter);
 function performFunctionIfCommandIs(inputCommand, query) {
 	switch(inputCommand) {
 		case "spotify-this-song":
-			console.log("spotify switch input command: " + inputCommand);
-			console.log("spotify switch query: " + query);
-			// console.log("parameter: " + parameter);
 			if(query === "") {
 				spotifySearch("the sign");
 			}else {
@@ -54,13 +52,7 @@ function performFunctionIfCommandIs(inputCommand, query) {
 			break;
 
 		case "do-what-it-says":
-			console.log("in switch");
-			// console.log("query: " + query);
-			// console.log("paramtr: " + parameter);
 			doWhatRandomFileSays();
-			// console.log("after reading file");
-			// console.log("query: " + query);
-			// console.log("paramtr: " + parameter);
 			break;
 
 		default: 
@@ -71,18 +63,14 @@ function performFunctionIfCommandIs(inputCommand, query) {
 
 // Function to perform a spotify search of song entered by user
 function spotifySearch(parameter) {
-	console.log("in spotify function");
-	console.log("paramtr: " + parameter);
 	// Spotify API call with user-specified song name as parameter
 	spotify.search({ type: 'track', query: parameter}, function(err, data) {
 		    if ( err ) {
 		        console.log('Error occurred: ' + err);
 		        return;
 		    }
-		    console.log("Data: " + data);
 		    // Storing required data in array
 		 	var songDetailArray = data.tracks.items;
-		 	console.log("songdetail array: " + songDetailArray);
 		 	// Filtered array having just the data with song name specified
 		 	// This is done due to the inconsistent and disparaging data provided by this package
 		 	var newArray = songDetailArray.filter(item => item.name.trim().toLowerCase() === (parameter.trim().toLowerCase()));
@@ -94,7 +82,7 @@ function spotifySearch(parameter) {
 		 	console.log("Preview link: " + newArray[0].preview_url);
 		 	console.log("Album: " + newArray[0].album.name);
 		 	// Logging data
-		 	fs.appendFile("log.txt", "\n"+newArray[0].name +"\n"+newArray[0].artists[0].name+"\n"+ newArray[0].preview_url+"\n"+ newArray[0].album.name, function(error) {
+		 	fs.appendFile("log.txt", "\n" + newArray[0].name +"\n"+newArray[0].artists[0].name+"\n"+ newArray[0].preview_url+"\n"+ newArray[0].album.name, function(error) {
 				if(error) {
 					console.log(error);
 				}
@@ -118,13 +106,13 @@ function fetchMyTweets() {
 				// Cutting off latest tweets at 20
 			    if (index < 20) {
 			    	// Logging tweet and info
-					fs.appendFile("log.txt", "\n" + "-----------------------" + "\n" + item.created_at + "\n" + item.text + "\n" + "-----------------------" , function(error) {
+					fs.appendFile("log.txt", "\n" + "-----------------------" + "\n" + moment(item.created_at).format('llll') + "\n" + item.text + "\n" + "-----------------------" , function(error) {
 						if(error) {
 							console.log(error);
 						}
 					})
 				    console.log(" ");
-					console.log(item.created_at);
+					console.log(moment(item.created_at).format('llll'));
 					console.log(" ");
 					console.log(item.text);
 					console.log(" ");
@@ -145,7 +133,6 @@ function fetchMovieDetails(movieName) {
 		console.log("----------------------");
 	}else {
 		movieName = movieName.trim().split(" ").join("+");
-		console.log(movieName);
 		request('http://www.omdbapi.com/?t=' + movieName + '&tomatoes=true', function (error, response, body) {
 			// If no error and statusCodes are either success 
 			if (!error && (response.statusCode == 200)) {
@@ -161,7 +148,7 @@ function fetchMovieDetails(movieName) {
 			    console.log("Rotten Tomatoes Rating: " + data.tomatoRating);
 			    console.log("Rotten Tomatoes URL: " + data.tomatoURL);
 			    // Log data
-			    fs.appendFile("log.txt", "\n" + "-----------------------" + "\n" + data.Title + "\n" + data.Year + "\n"+ data.Rated + "\n" + data.Country + "\n" + data.Language + "\n" + data.Actors + "\n"+ data.Plot + "\n" + data.tomatoRating + "\n" + data.tomatoURL + "-----------------------" , function(error) {
+			    fs.appendFile("log.txt", "\n" + "-----------------------" + "\n" + data.Title + "\n" + data.Year + "\n"+ data.Rated + "\n" + data.Country + "\n" + data.Language + "\n" + data.Actors + "\n"+ data.Plot + "\n" + data.tomatoRating + "\n" + data.tomatoURL + "\n" + "-----------------------" , function(error) {
 					if(error) {
 						console.log(error);
 					}
@@ -200,7 +187,7 @@ function doWhatRandomFileSays() {
 }
 
 function logData(command, parameter) {
-	fs.appendFile("log.txt", "\n"+ "----------------------------" + "\n" + command + " " + parameter + "\n" + "----------------------------", function(error) {
+	fs.appendFile("log.txt", "\n"+ "----------------------------" + "\n" + moment().format("llll") + "\n" + command + " " + parameter + "\n" + "----------------------------", function(error) {
 		if(error) {
 			console.log(error);
 		}
