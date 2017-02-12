@@ -1,0 +1,29 @@
+{
+  "name": "lirinodeapp",
+  "version": "1.0.0",
+  "description": "Liri app like Siri but with language instead of voice recognition",
+  "main": "keys.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AceARK/Liri-Node-App.git"
+  },
+  "keywords": [
+    "liri",
+    "node"
+  ],
+  "author": "AceARK",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AceARK/Liri-Node-App/issues"
+  },
+  "homepage": "https://github.com/AceARK/Liri-Node-App#readme",
+  "dependencies": {
+    "moment": "^2.17.1",
+    "request": "^2.79.0",
+    "spotify": "^0.3.0",
+    "twitter": "^1.7.0"
+  }
+}

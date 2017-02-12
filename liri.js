@@ -75,20 +75,22 @@ function spotifySearch(parameter) {
 		 	// This is done due to the inconsistent and disparaging data provided by this package
 		 	var newArray = songDetailArray.filter(item => item.name.trim().toLowerCase() === (parameter.trim().toLowerCase()));
 		 	// Printing out details
-		 	console.log("------------------------------");
-		 	console.log(" ");
-		 	console.log("Artist(s): " + newArray[0].name);
-		 	console.log("Song: " + newArray[0].artists[0].name);
-		 	console.log("Preview link: " + newArray[0].preview_url);
-		 	console.log("Album: " + newArray[0].album.name);
+
+		 	console.log(`
+------------------------------
+
+Artist(s): ${newArray[0].name}
+Song: ${newArray[0].artists[0].name}
+Preview link: ${newArray[0].preview_url}
+Album: ${newArray[0].album.name}
+
+------------------------------`);
 		 	// Logging data
 		 	fs.appendFile("log.txt", "\n" + newArray[0].name +"\n"+newArray[0].artists[0].name+"\n"+ newArray[0].preview_url+"\n"+ newArray[0].album.name, function(error) {
 				if(error) {
 					console.log(error);
 				}
 			})
-		 	console.log(" ");
-		 	console.log("------------------------------");
 		});
 }
 
