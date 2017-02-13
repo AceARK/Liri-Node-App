@@ -102,7 +102,7 @@ ${newArray[0].album.name}
 // Function to fetch latest 20 tweets
 function fetchMyTweets() {
 	// params variable holds the screen_name of the user. Currently checking 'WatchingInAwe's' tweets
-	var params = {screen_name: 'voguemagazine'};
+	var params = {screen_name: 'realDonaldTrump'};
 	// API call to fetch tweets of given username
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 		if (!error) {
