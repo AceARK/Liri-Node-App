@@ -102,7 +102,7 @@ ${newArray[0].album.name}
 // Function to fetch latest 20 tweets
 function fetchMyTweets() {
 	// params variable holds the screen_name of the user. Currently checking 'WatchingInAwe's' tweets
-	var params = {screen_name: 'realDonaldTrump'};
+	var params = {screen_name: 'voguemagazine'};
 	// API call to fetch tweets of given username
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 		if (!error) {
@@ -110,7 +110,6 @@ function fetchMyTweets() {
 			console.log(`
 Here are your latest 20 tweets - 
 ===============================`);
-
 			// Get and print tweets
 			tweets.every(function(item, index) {
 				// Cutting off latest tweets at 20
@@ -119,7 +118,7 @@ Here are your latest 20 tweets -
 			    	// Logging tweet and info
 					fs.appendFile("log.txt", `
 -----------------------
-${moment(item.created_at).format('llll')}
+${moment(item.created_at, 'ddd MMM DD HH:mm:ss ZZ YYYY').format('llll')}
 ${index + 1}. ${item.text} 
 -----------------------
 ` , function(error) {
@@ -130,7 +129,7 @@ ${index + 1}. ${item.text}
 
 					// Printing out timestamp and tweet to console
 					console.log(
-`${moment(item.created_at).format('llll')}
+`${moment(item.created_at, 'ddd MMM DD HH:mm:ss ZZ YYYY').format('llll')}
 ${index + 1}. ${item.text} 
 ===============================
 `					);
