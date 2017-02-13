@@ -78,12 +78,10 @@ function spotifySearch(parameter) {
 
 		 	console.log(`
 ------------------------------
-
 Artist(s): ${newArray[0].name}
 Song: ${newArray[0].artists[0].name}
 Preview link: ${newArray[0].preview_url}
 Album: ${newArray[0].album.name}
-
 ------------------------------`);
 		 	// Logging data
 		 	fs.appendFile("log.txt", `
@@ -142,7 +140,7 @@ function fetchMovieDetails(movieName) {
 	if(movieName === "") {
 		console.log(`
 ----------------------
-If you haven't watched "Mr. Nobody," then you should: http://www.imdb.com/title/tt0485947/
+If you haven't watched "Mr. Nobody", you should: http://www.imdb.com/title/tt0485947/
 It's on Netflix!
 ----------------------
 		`);
