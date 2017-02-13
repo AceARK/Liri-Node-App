@@ -74,8 +74,8 @@ function spotifySearch(parameter) {
 		 	// Filtered array having just the data with song name specified
 		 	// This is done due to the inconsistent and disparaging data provided by this package
 		 	var newArray = songDetailArray.filter(item => item.name.trim().toLowerCase() === (parameter.trim().toLowerCase()));
-		 	// Printing out details
-
+		 	
+		 	// Printing out details to console
 		 	console.log(`
 ------------------------------
 Artist(s): ${newArray[0].name}
@@ -85,11 +85,12 @@ Album: ${newArray[0].album.name}
 ------------------------------`);
 		 	// Logging data
 		 	fs.appendFile("log.txt", `
+------------------------------
 ${newArray[0].name}
 ${newArray[0].artists[0].name}
 ${newArray[0].preview_url}
 ${newArray[0].album.name}
-
+------------------------------
 `, function(error) {
 				if(error) {
 					console.log(error);
@@ -105,27 +106,32 @@ function fetchMyTweets() {
 	// API call to fetch tweets of given username
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 		if (!error) {
+			// Heading for tweets
 			console.log(`
 Here are your latest 20 tweets - 
 ===============================`);
+
 			// Get and print tweets
 			tweets.every(function(item, index) {
 				// Cutting off latest tweets at 20
 			    if (index < 20) {
+
 			    	// Logging tweet and info
 					fs.appendFile("log.txt", `
 -----------------------
 ${moment(item.created_at).format('llll')}
-${item.text} 
+${index + 1}. ${item.text} 
 -----------------------
 ` , function(error) {
 						if(error) {
 							console.log(error);
 						}
 					});
+
+					// Printing out timestamp and tweet to console
 					console.log(
 `${moment(item.created_at).format('llll')}
-${item.text} 
+${index + 1}. ${item.text} 
 ===============================
 `					);
 			    	return true;
@@ -138,18 +144,22 @@ ${item.text}
 
 function fetchMovieDetails(movieName) {
 	if(movieName === "") {
+		// Printing out random text to console
 		console.log(`
 ----------------------
 If you haven't watched "Mr. Nobody", you should: http://www.imdb.com/title/tt0485947/
 It's on Netflix!
 ----------------------
 		`);
+
 	}else {
 		movieName = movieName.trim().split(" ").join("+");
 		request('http://www.omdbapi.com/?t=' + movieName + '&tomatoes=true', function (error, response, body) {
 			// If no error and statusCodes are either success 
 			if (!error && (response.statusCode == 200)) {
 				var data = JSON.parse(body);
+
+				// Printing out data to console
 				console.log(`
 ========================
 Title: ${data.Title}
@@ -163,6 +173,7 @@ Rotten Tomatoes Rating: ${data.tomatoRating}
 Rotten Tomatoes URL: ${data.tomatoURL}
 ========================
 				`);
+
 			    // Log data
 			    fs.appendFile("log.txt", `
 -----------------------
@@ -179,13 +190,16 @@ ${data.tomatoURL}
 					if(error) {
 						console.log(error);
 					}
-				})
+				});
+
 			}else if(response.statusCode == 503) {
+// Printing out service unavailable error to console, since that seems to be a common response from OMDB
 				console.log(`
 ------------------------
 Service Unavailable
 HTTP Error 503. The service is unavailable.
 ------------------------`);
+
 			}else if(response.statusCode == 400) {
 				console.log("Bad request.");
 			}else if(response.statusCode == 502) {
@@ -212,6 +226,7 @@ function doWhatRandomFileSays() {
 }
 
 function logData(command, parameter) {
+	// Logging timestamp, command and query term to log.txt
 	fs.appendFile("log.txt", `
 ----------------------------
 ${moment().format("llll")}
