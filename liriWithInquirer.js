@@ -70,8 +70,28 @@ function performFunctionIfCommandIs(inputCommand) {
 			})
 			break;
 
-		case "my-tweets":
-			fetchMyTweets(parameter);
+		case "Twitter":
+			inquirer.prompt([
+				{
+					type: 'confirm',
+					message: 'Would you like to provide your userName?',
+					name: 'name' 
+				}
+			]).then(function(user) {
+				if(user.name) {
+					inquirer.prompt([
+						{
+							message: 'Enter your twitter username: ',
+							name: 'userName' 
+						}
+					]).then(function(twitter) {
+						fetchMyTweets(twitter.userName);
+					})
+				}else {
+					console.log("Alright then, here's a bunch of tweets from Donald Trump for your entertainment.");
+					fetchMyTweets("");
+				}
+			})
 			break;
 
 		case "movie-this":
@@ -123,9 +143,59 @@ ${newArray[0].album.name}
 					console.log(error);
 				}
 			})
-		});
-	doAnother();
+			doAnother();
+	});
 }
+
+
+// Function to fetch latest 20 tweets
+function fetchMyTweets(parameter) {
+	if(parameter !== "") {
+		var params = {screen_name: parameter};
+	}else {
+		// params variable holds the screen_name of the user. 
+		var params = {screen_name: 'realDonaldTrump'};
+	}
+
+	// API call to fetch tweets of given username
+	client.get('statuses/user_timeline', params, function(error, tweets, response) {
+		if (!error) {
+			// Heading for tweets
+			console.log(`
+Here are your latest 20 tweets - 
+===============================`);
+			// Get and print tweets
+			tweets.every(function(item, index) {
+				// Cutting off latest tweets at 20
+			    if (index < 20) {
+
+			    	// Logging tweet and info
+					fs.appendFile("logInquirer.txt", `
+-----------------------
+${moment(item.created_at, 'ddd MMM DD HH:mm:ss ZZ YYYY').format('llll')}
+${index + 1}. ${item.text} 
+-----------------------
+` , function(error) {
+						if(error) {
+							console.log(error);
+						}
+					});
+
+					// Printing out timestamp and tweet to console
+					console.log(
+`${moment(item.created_at, 'ddd MMM DD HH:mm:ss ZZ YYYY').format('llll')}
+${index + 1}. ${item.text} 
+===============================
+`					);
+			    	return true;
+			    }
+				
+			});
+		} 
+		doAnother();
+	});
+}
+
 
 // Ask user if they want to continue with another action
 function doAnother() {
