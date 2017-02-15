@@ -3,7 +3,7 @@ LIRI - Language Recognition and Interpretation Interface. A node app that takes 
 
 Steps:-
 
-Enter node liri.js command argument
+Enter: node liri.js command argument
 
 All commands work without arguments but with arguments (as shown below) gives better results -
 
@@ -13,7 +13,13 @@ spotify-this-song <song Name>
 movie-this <movie Name>
 do-what-it-says 
 
+*******************
 
-**** Try out liriWithInquirer.js for a more user friendly version of Liri ****
-**** node liriWithInquirer.js ****
-**** Steps:- self-explanatory ****
+Also try out : liriWithInquirer.js 
+for a more user friendly version of Liri 
+
+Enter: node liriWithInquirer.js 
+
+Steps:- self-explanatory
+
+*******************
