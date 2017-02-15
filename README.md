@@ -8,9 +8,9 @@ Enter: node liri.js command argument
 All commands work without arguments but with arguments (as shown below) gives better results -
 
 command argument :
-my-tweets <twitter UserName>
-spotify-this-song <song Name>
-movie-this <movie Name>
+my-tweets *twitterUserName*
+spotify-this-song *songName*
+movie-this *movieName*
 do-what-it-says 
 
 *******************
