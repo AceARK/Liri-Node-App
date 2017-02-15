@@ -151,6 +151,7 @@ ${index + 1}. ${item.text}
 	});
 }
 
+// Function to fetch movie details
 function fetchMovieDetails(movieName) {
 	if(movieName === "") {
 		// Printing out random text to console
