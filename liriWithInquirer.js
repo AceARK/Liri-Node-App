@@ -86,10 +86,12 @@ function performFunctionIfCommandIs(inputCommand) {
 						}
 					]).then(function(twitter) {
 						fetchMyTweets(twitter.userName);
+						logData(twitter.userName);
 					})
 				}else {
 					console.log("Alright then, here's a bunch of tweets from Donald Trump for your entertainment.");
 					fetchMyTweets("");
+					logData('realDonaldTrump');
 				}
 			})
 			break;
@@ -98,7 +100,7 @@ function performFunctionIfCommandIs(inputCommand) {
 			fetchMovieDetails(query);
 			break;
 
-		case "do-what-it-says":
+		case "Do something random":
 			doWhatRandomFileSays();
 			break;
 
@@ -196,6 +198,23 @@ ${index + 1}. ${item.text}
 	});
 }
 
+// Function to do whatever is written in random.txt file
+function doWhatRandomFileSays() {
+	// Reading random.txt 
+	fs.readFile("random.txt", "utf-8", function(error, data) {
+		var dataArray = data.split(',');
+		// Removing quotes at the end of string as specified in instruction format
+		var searchTerm = dataArray[1].substring(1,dataArray[1].length-1);
+		if(dataArray[0].includes('spotify')) {
+			spotifySearch(searchTerm);
+		}else if(dataArray[0].includes('tweets')){
+			fetchMyTweets("");
+		}else if(dataArray[0].includes('movie')) {
+			fetchMovieDetails(searchTerm);
+		}
+		logData(searchTerm);
+	});
+}
 
 // Ask user if they want to continue with another action
 function doAnother() {
