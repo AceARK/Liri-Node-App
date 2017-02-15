@@ -2,6 +2,8 @@ var inquirer = require('inquirer');
 var spotify = require('spotify');
 var Twitter = require('twitter');
 var request = require('request');
+var movieRequire = require("./keys.js");
+var movieDB = require('moviedb')(movieRequire.movieDBKey.key);
 var fs = require("fs");
 var moment = require("moment");
 var twitterRequire = require("./keys.js");
@@ -15,14 +17,6 @@ var twitterDetails = {
 }
 
 var client = new Twitter(twitterDetails);
-
-// var command = process.argv[2];
-// var parameter = "";
-
-// // Getting anything typed after command as parameter
-// for(var i = 3; i < process.argv.length; i++) {
-// 	parameter += process.argv[i] + " ";
-// }
 
 inquire();
 
@@ -96,8 +90,36 @@ function performFunctionIfCommandIs(inputCommand) {
 			})
 			break;
 
-		case "movie-this":
-			fetchMovieDetails(query);
+		case "Movie DB":
+			inquirer.prompt([
+				{
+					type: 'confirm',
+					message: 'Would you like to enter a movie name?',
+					name: 'enterName' 
+				}
+			]).then(function(choice) {
+				if(choice.enterName) {
+					inquirer.prompt([
+						{
+							message: 'Enter the movie name:',
+							name: 'name' 
+						}
+					]).then(function(movie) {
+						movieSearch(movie.name);
+						logData(movie.name);
+					})
+				}else {
+					// Printing out random text to console
+					console.log(`
+----------------------
+If you haven't watched "Mr. Nobody", you should: http://www.imdb.com/title/tt0485947/
+It's on Netflix!
+----------------------
+					`);
+					logData('Mr.Nobody');
+					doAnother();
+				}
+			});
 			break;
 
 		case "Do something random":
@@ -108,6 +130,41 @@ function performFunctionIfCommandIs(inputCommand) {
 			console.log("Hello!");
 			break;
 	}
+}
+
+function movieSearch(query) {
+	var movieName = query.trim().toLowerCase();
+	movieDB.searchMovie({query: movieName}, function(err, res){
+	  	var data = res.results[0];
+		// Printing out data to console
+				console.log(`
+========================
+Title: ${data.title}
+Release date: ${data.release_date}
+Language: ${data.original_language}
+Plot: ${data.overview}
+Popularity: ${data.popularity}
+Average vote rating: ${data.vote_average}
+========================
+				`);
+
+			    // Log data
+			    fs.appendFile("logInquirer.txt", `
+-----------------------
+${data.title}
+${data.release_date}
+${data.original_language}
+${data.overview}
+${data.popularity}
+${data.vote_average} 
+-----------------------` , function(error) {
+					if(error) {
+						console.log(error);
+					}
+				});
+		doAnother();
+
+	});
 }
 
 // Function to perform a spotify search of song entered by user
