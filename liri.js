@@ -44,7 +44,7 @@ function performFunctionIfCommandIs(inputCommand, query) {
 			break;
 
 		case "my-tweets":
-			fetchMyTweets();
+			fetchMyTweets(parameter);
 			break;
 
 		case "movie-this":
@@ -101,8 +101,18 @@ ${newArray[0].album.name}
 
 // Function to fetch latest 20 tweets
 function fetchMyTweets() {
-	// params variable holds the screen_name of the user. Currently checking 'WatchingInAwe's' tweets
-	var params = {screen_name: 'realDonaldTrump'};
+	if(parameter !== "") {
+		var params = {screen_name: parameter};
+	}else {
+		console.log(`
+----------------------
+You can get your own tweets by entering 'my-tweets <yourTwitterUsername>'. For the timebeing, let's assume you are Donald Trump.
+----------------------
+`);
+		// params variable holds the screen_name of the user. 
+		var params = {screen_name: 'realDonaldTrump'};
+	}
+
 	// API call to fetch tweets of given username
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 		if (!error) {
