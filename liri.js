@@ -31,7 +31,6 @@ logData(command, parameter);
 /* 
  * Function Definitions begin
 */
-
 // Function to map each command to it's corresponding function
 function performFunctionIfCommandIs(inputCommand, query) {
 	switch(inputCommand) {
@@ -235,6 +234,7 @@ function doWhatRandomFileSays() {
 	});
 }
 
+// Log data
 function logData(command, parameter) {
 	// Logging timestamp, command and query term to log.txt
 	fs.appendFile("log.txt", `

@@ -20,6 +20,7 @@ var client = new Twitter(twitterDetails);
 
 inquire();
 
+// Function to get user's choice of action
 function inquire() {
 	inquirer.prompt([
 		{
@@ -132,6 +133,7 @@ It's on Netflix!
 	}
 }
 
+// Function to search for movie using movieDB
 function movieSearch(query) {
 	var movieName = query.trim().toLowerCase();
 	movieDB.searchMovie({query: movieName}, function(err, res){
