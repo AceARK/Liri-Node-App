@@ -78,8 +78,8 @@ function spotifySearch(parameter) {
 		 	// Printing out details to console
 		 	console.log(`
 ------------------------------
-Artist(s): ${newArray[0].name}
-Song: ${newArray[0].artists[0].name}
+Song: ${newArray[0].name}
+Artist(s): ${newArray[0].artists[0].name}
 Preview link: ${newArray[0].preview_url}
 Album: ${newArray[0].album.name}
 ------------------------------`);
